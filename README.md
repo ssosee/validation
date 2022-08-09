@@ -28,7 +28,15 @@
 ![img.png](img.png)
 ### 상품 저장 실패
 ![img_1.png](img_1.png)
-<br><br>1
+<br><br>
+
+**검증오류 보관**
+
+`Map<String, String> errors = new HashMap<>();`
+
+검증시 오류가 발생하면 어떤 검증에서 오류가 발생했는지 정보를 담아둔다...!
+
+**검증처리**
 
 검증 처리를 하기 위해서는 `@ModelAttribute` 바로 뒤에 `RedirectAttributes`가 와야 한다.
 ```java
@@ -73,82 +81,33 @@ public String addItem(@ModelAttribute Item item, RedirectAttributes redirectAttr
         }
 ```
 
+**Safe Navigation Operator**
+
+`errors?.`는 `errors`가 `null`일때 `NullpointerException`이 발생하는 대신, `null`을 반환하는 문법이다.
+
+`th:if` 에서 `null`은 실패로 처리되므로 오류 메시지가 출력되지 않는다.
 ```html
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <link th:href="@{/css/bootstrap.min.css}"
-          href="../css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .container {
-            max-width: 560px;
-        }
-        .field-error {
-            border-color: #dc3545;
-            color: #dc3545;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-
-    <div class="py-5 text-center">
-        <h2 th:text="#{page.addItem}">상품 등록</h2>
-    </div>
-
-    <form action="item.html" th:action th:object="${item}" method="post">
-
-        <div th:if="${errors?.containsKey('globalError')}">
-            <p class="field-error" th:text="${errors['globalError']}">전체 오류 메시지</p>
-        </div>
-
-        <div>
-            <label for="itemName" th:text="#{label.item.itemName}">상품명</label>
-            <input type="text" id="itemName" th:field="*{itemName}"
-                   th:class="${errors?.containsKey('itemName')} ? 'form-control field-error' : 'form-control'"
-                   class="form-control" placeholder="이름을 입력하세요">
-            <div class="field-error" th:if="${errors?.containsKey('itemName')}" th:text="${errors['itemName']}">상품명 오류</div>
-        </div>
-        <div>
-            <label for="price" th:text="#{label.item.price}">가격</label>
-            <input type="text" id="price" th:field="*{price}"
-                   th:class="${errors?.containsKey('price')} ? 'form-control field-error' : 'form-control'"
-                   class="form-control" placeholder="가격을 입력하세요">
-            <div class="field-error" th:if="${errors?.containsKey('price')}" th:text="${errors['price']}">가격 오류</div>
-        </div>
-        <div>
-            <label for="quantity" th:text="#{label.item.quantity}">수량</label>
-            <input type="text" id="quantity" th:field="*{quantity}"
-                   th:class="${errors?.containsKey('quantity')} ? 'form-control field-error' : 'form-control'"
-                   class="form-control" placeholder="수량을 입력하세요">
-            <div class="field-error" th:if="${errors?.containsKey('quantity')}" th:text="${errors['quantity']}">수량 오류</div>
-        </div>
-
-        <hr class="my-4">
-
-        <div class="row">
-            <div class="col">
-                <button class="w-100 btn btn-primary btn-lg" type="submit" th:text="#{button.save}">상품 등록</button>
-            </div>
-            <div class="col">
-                <button class="w-100 btn btn-secondary btn-lg"
-                        onclick="location.href='items.html'"
-                        th:onclick="|location.href='@{/validation/v1/items}'|"
-                        type="button" th:text="#{button.cancel}">취소</button>
-            </div>
-        </div>
-
-    </form>
-
-</div> <!-- /container -->
-</body>
-</html>
+<div th:if="${errors?.containsKey('globalError')}">
+  <p class="field-error" th:text="${errors['globalError']}">전체 오류 메시지</p>
+</div>
 ```
-**검증오류 보관**
 
-`Map<String, String> errors = new HashMap<>();`
+**필드 오류 처리**
+```html
+<input type="text" th:classappend="${errors?.containsKey('itemName')} ? 'fielderror' : _" class="form-control">
+```
 
-검증시 오류가 발생하면 어떤 검증에서 오류가 발생했는지 정보를 담아둔다...!
+**필드 오류 처리 -입력 폼 색상 적용**
+```html
+<input type="text" class="form-control field-error">
+```
+
+**필드 오류 처리 -메시지**
+```html
+<div class="field-error" th:if="${errors?.containsKey('itemName')}" th:text="${errors['itemName']}">
+ 상품명 오류
+</div>
+```
+
+
 ## 검증2 -Validation
