@@ -36,9 +36,6 @@
 
 검증시 오류가 발생하면 어떤 검증에서 오류가 발생했는지 정보를 담아둔다...!
 
-**검증처리**
-
-검증 처리를 하기 위해서는 `@ModelAttribute` 바로 뒤에 `RedirectAttributes`가 와야 한다.
 ```java
 @PostMapping("/add")
 public String addItem(@ModelAttribute Item item, RedirectAttributes redirectAttributes, Model model) {
