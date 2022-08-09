@@ -28,7 +28,7 @@
 ![img.png](img.png)
 ### 상품 저장 실패
 ![img_1.png](img_1.png)
-<br><br>
+<br><br>1
 
 검증 처리를 하기 위해서는 `@ModelAttribute` 바로 뒤에 `RedirectAttributes`가 와야 한다.
 ```java
